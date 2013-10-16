@@ -1,0 +1,171 @@
+	body, html{
+            font-family:Calibri, sans-serif;
+            height:100%;
+            margin:0;
+        }
+        header, section, article, footer{
+            display:block;
+        }
+        *{
+            outline:none;
+        }
+        li{
+            list-style:none;
+        }
+        div#wrapper{
+            width:1000px;
+            height:100%;
+            min-height:400px;
+            margin:0 auto;
+            position:relative;
+        }
+        header{
+            background-color:#FF8A84;
+            border:2px solid;
+            border-radius:10px;
+        }
+        div#name{
+            float:left;
+        }
+        div#name h1{
+            padding:0 0 0 30px;
+        }
+        div#currentDate{
+            height:50px;
+            width:300px;
+            float:right;
+            border:1px solid blue;
+        }
+        div#middleSection{
+            margin:20px 0 0 0;
+            height:74%;
+        }
+        div#middleSection section{
+            float:left;
+            border:2px solid black;
+            border-radius:10px;
+            background-color:#A8C6FA;
+            min-height:100%;
+        }
+        section#leftMenu{
+            width:200px;
+        }
+        section#leftMenu > ul{
+            background-color:white;
+            padding:10px 0;
+            margin:0;
+            border:solid;
+            border-radius:5px;
+        }
+        section#leftMenu > ul > li{
+            padding:3px 0 0 18px;
+            background:url(images/right_min.png) no-repeat 95% 50%;
+        }
+        section#leftMenu > ul > li:hover{
+            background-color:silver;
+            cursor:pointer;
+        }
+        #curMonth{
+             left:200px;
+             top:125px;
+             display:none;
+        }
+        #curKvartal{
+            left:200px;
+            top:149px;
+            display:none;
+        }
+        #curYear{
+
+            left:200px;
+            top:173px;
+            padding:3px 3px;
+            display:none;
+        }
+        .activeMenu{
+            position:absolute;
+            border:1px solid red;
+            border-radius:5px;
+            padding:0;
+            background-color:white;
+            display:block !important;
+        }
+        .activeMenu li{
+            padding:3px 10px;
+        }
+        .activeMenu li:hover{
+            background-color:silver;
+            cursor:pointer;
+        }
+        section#sectionCalendar{
+            border:none !important;
+            background-color:white !important;
+            width:504px;
+            margin:0 10px;
+        }
+        div#calendar{
+            border:4px solid black;
+            border-radius:5px;
+        }
+        .borderBottom{
+            border-bottom:solid;
+            background-color: #E6E6E6;
+          }
+        .out {
+            background-color: black;
+            color:white;
+        }
+        .day{
+            background-color:white;
+        }
+        .nowDay{
+            background-color:silver;
+        }
+        table {
+            width:100%;
+            height:300px;
+            table-layout:fixed;
+            border-collapse:collapse;
+        }
+        td, th {
+            vertical-align:middle;
+            padding:3px;
+            text-align:center;
+        }
+        .btn{
+            width:20px;
+            height:20px;
+            border:none;
+            cursor:pointer;
+            padding:0 3px 0 0;
+        }
+        .left{
+            background:url('images/left.png') no-repeat;
+        }
+        .right{
+            background:url('images/right.png') no-repeat;
+        }
+        div#calendar table td.day:hover{
+            background-color:silver;
+            cursor:pointer;
+        }
+        .weekDays{
+            background-color:#AFF0D9;
+        }
+        section#task{
+            width:266px;
+        }
+        footer{
+            height:55px;
+            background-color:#444444;
+            border:2px solid;
+            border-radius:10px;
+            margin-top:10px;
+        }
+        footer p{
+            color:white;
+            text-align:center;
+        }
+        div.clear{
+            clear:both;
+        }

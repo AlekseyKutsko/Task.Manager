@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="keywords" content="Перечень ключевых слов"/>
+    <meta name="description" content="Содержимое мета-тега «description»"/>
+    <link href="images/icon.jpg" rel="shortcut icon"/>
+    <link type="text/css" href="style/css.css" rel="stylesheet"/>
+    <title>Менеджер задач</title>
+
+    <script type="text/javascript">
+        window.onload = function(){
+            createCalendar('calendar', now.getFullYear(), now.getMonth());
+            workLeftMenu(now.getFullYear(), now.getMonth());
+        };
+        document.createElement('header');
+        document.createElement('article');
+        document.createElement('section');
+        document.createElement('footer');
+
+    </script>
+
+    <!--[if IE 7]><link href="style/ie7.css" rel="stylesheet" type="text/css" /><![endif]-->
+</head>
+<body>
+    <div id="wrapper">
+        <header>
+            <div id="name">
+                <h1>Менеджер задач</h1>
+            </div>
+            <div id="currentDate">
+
+            </div>
+            <div class="clear"></div>
+        </header>
+        <div id="middleSection">
+            <section id="leftMenu">
+                <ul id="ul">
+                    <li>Месяц (<span id="month"></span>)</li>
+                    <li>Квартал (<span id="kvartal"></span>)</li>
+                    <li>Год (<span id="year"></span>)</li>
+                </ul>
+            </section>
+            <section id="sectionCalendar">
+                <div id="calendar"></div>
+            </section>
+            <section id="task">
+
+            </section>
+        </div>
+        <footer>
+            <p>Kutsko Incorporation &copy;, 2013</p>
+        </footer>
+    </div>
+    <script type="text/javascript" src="calendar.js"></script>
+</body>
+</html>
