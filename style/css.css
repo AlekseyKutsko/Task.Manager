@@ -59,7 +59,7 @@
         }
         section#leftMenu > ul > li{
             padding:3px 0 0 18px;
-            background:url(images/right_min.png) no-repeat 95% 50%;
+            background:url(../images/right_min.png) no-repeat 95% 50%;
         }
         section#leftMenu > ul > li:hover{
             background-color:silver;
@@ -140,10 +140,10 @@
             padding:0 3px 0 0;
         }
         .left{
-            background:url('images/left.png') no-repeat;
+            background:url('../images/left.png') no-repeat;
         }
         .right{
-            background:url('images/right.png') no-repeat;
+            background:url('../images/right.png') no-repeat;
         }
         div#calendar table td.day:hover{
             background-color:silver;
