@@ -90,9 +90,7 @@ function workLeftMenu(year, month){
          kvartalLi = leftMenu.getElementsByTagName('li')[1],
          yearLi = leftMenu.getElementsByTagName('li')[2];
 
-
-
-     //выбор месяца, года, квартала
+    //выбор месяца, года, квартала
 
      monthLi.onclick = function(){
 
@@ -109,11 +107,12 @@ function workLeftMenu(year, month){
                  ul.appendChild(currMonth);
 
                  currMonth.onclick = function(event){
-                    var evt = event || window.event;
+                    var evt = event || window.event,
+                        textCont = yearHTML.textContent || yearHTML.innerText; //IE8(innerText)
                     evt.stopPropagation ? evt.stopPropagation() : (evt.cancelBubble = true);
-                    createCalendar('calendar', +yearHTML.textContent, i);
-                    changeDate(+yearHTML.textContent, i, monthName2);
-                    this.parentNode.parentNode.removeChild(ul);
+                        createCalendar('calendar', +textCont, i);
+                        changeDate(+textCont, i, monthName2);
+                        this.parentNode.parentNode.removeChild(ul);
                  };
              })(i);
          }
@@ -133,27 +132,28 @@ function workLeftMenu(year, month){
                 ul.appendChild(currKvartal);
 
                 currKvartal.onclick = function(event){
-                    var evt = event || window.event;
+                    var evt = event || window.event,
+                        textCont = yearHTML.textContent || yearHTML.innerText; //IE8(innerText)
                     evt.stopPropagation ? evt.stopPropagation() : (evt.cancelBubble = true);
                     switch(i){
                         case 0: {
-                            createCalendar('calendar', +yearHTML.textContent, i);
-                            changeDate(+yearHTML.textContent, i, monthName2);
+                            createCalendar('calendar', +textCont, i);
+                            changeDate(+textCont, i, monthName2);
                             break;
                         }
                         case 1: {
-                            createCalendar('calendar', +yearHTML.textContent, i + 2);
-                            changeDate(+yearHTML.textContent, i + 2, monthName2);
+                            createCalendar('calendar', +textCont, i + 2);
+                            changeDate(+textCont, i + 2, monthName2);
                             break;
                         }
                         case 2: {
-                            createCalendar('calendar', +yearHTML.textContent, i + 4);
-                            changeDate(+yearHTML.textContent, i + 4, monthName2);
+                            createCalendar('calendar', +textCont, i + 4);
+                            changeDate(+textCont, i + 4, monthName2);
                             break;
                         }
                         case 3: {
-                            createCalendar('calendar', +yearHTML.textContent, i + 6);
-                            changeDate(+yearHTML.textContent, i + 6, monthName2);
+                            createCalendar('calendar', +textCont, i + 6);
+                            changeDate(+textCont, i + 6, monthName2);
                             break;
                         }
                     }
@@ -173,12 +173,14 @@ function workLeftMenu(year, month){
             var currYear = document.getElementById('curYear');
             txt.focus();
 
-            currYear.onkeydown = function(event){
-                var monthName = monthHTML.textContent;
-                if((event.keyCode >= 96 && event.keyCode <= 105) || (event.keyCode >= 48 && event.keyCode <= 57)){
-                console.log(event.keyCode);
-                }
-                if(event.keyCode == 13){
+            currYear.onkeypress = function(event){
+                var evt = event || window.event,
+                    chr = getChar(evt),
+                    monthName = monthHTML.textContent || monthHTML.innerText; //IE8(innerText)
+
+                if (evt.ctrlKey || evt.altKey || evt.metaKey) return;
+
+                if(evt.keyCode == 13){
                     for(var i = 0; i <= monthName2.length; i++){
                         if(monthName == monthName2[i]){
                             createCalendar('calendar', +currYear.value, i);
@@ -186,6 +188,12 @@ function workLeftMenu(year, month){
                             txt.parentNode.removeChild(txt);
                         }
                     }
+                }
+
+                if (chr == null) return;
+
+                if (chr < '0' || chr > '9') {
+                    return false;
                 }
             };
         }
@@ -222,6 +230,22 @@ function closeMenu(id, event){
             elem.parentNode.removeChild(elem);
         }
     }
+}
+
+
+// event.type должен быть keypress
+function getChar(event) {
+    if (event.which == null) {  // IE
+        if (event.keyCode < 32) return null; // спец. символ
+        return String.fromCharCode(event.keyCode)
+    }
+
+    if (event.which!=0 && event.charCode!=0) { // все кроме IE
+        if (event.which < 32) return null; // спец. символ
+        return String.fromCharCode(event.which); // остальные
+    }
+
+    return null; // спец. символ
 }
 
 document.onclick = function(event){
