@@ -4,6 +4,20 @@ header div#name{
 footer p{
 	padding:17px 0;
 }
-footer{
-	margin-top:-60px;
+#curMonth{
+    left:161px;
+    top:115px;
+    display:none;
+}
+#curKvartal{
+    left:161px;
+    top:137px;
+    display:none;
+}
+#curYear{
+    width:90px;
+    left:201px;
+    top:160px;
+    padding:3px 3px;
+    display:none;
 }

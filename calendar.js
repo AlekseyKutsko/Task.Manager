@@ -17,7 +17,8 @@ function createCalendar(id, year, month) {
         nowDay = now.getDate(),
         parent = document.getElementById(id);
     parent.innerHTML = '';
-    var table = document.createElement('table');
+    var table = document.createElement('table'),
+        tbody = document.createElement('tbody');
 
     // первая строка шапки календаря
     var tr = document.createElement('tr');
@@ -26,6 +27,12 @@ function createCalendar(id, year, month) {
     var button = document.createElement("button");
     button.className = 'btn left';
     button.setAttribute('onclick', 'createCalendar("calendar", ' + year + ', ' + (month - 1) + ')');
+    //для IE7
+    if(button.onclick != "createCalendar('calendar', ' + year + ', ' + (month - 1) + ')"){
+        button.onclick = function(){
+        createCalendar("calendar", year, (month - 1));
+        }
+    }
     var elem = document.createElement("th");
     elem.appendChild(button);
     tr.appendChild(elem);
@@ -33,24 +40,30 @@ function createCalendar(id, year, month) {
     // месяц год
     var cell = nowDay + ' ' + monthName[date.getMonth()] + ' ' + date.getFullYear() + ' г';
     elem = document.createElement('th');
-    elem.setAttribute('colspan', '5');
-    elem.appendChild(document.createTextNode(cell));    
+    elem.colSpan = 5;
+    elem.appendChild(document.createTextNode(cell));
     tr.appendChild(elem);
 
     // листать вправо
     button = document.createElement("button");
     button.className = 'btn right';
     button.setAttribute('onclick', 'createCalendar("calendar", ' + year + ', ' + (month + 1) + ')');
+    //для IE7
+    if(button.onclick != "createCalendar('calendar', ' + year + ', ' + (month + 1) + ')"){
+        button.onclick = function(){
+            createCalendar("calendar", year, (month + 1));
+        }
+    }
     var elem = document.createElement("th");
     elem.appendChild(button);
     tr.appendChild(elem);
-    table.appendChild(tr);
+    tbody.appendChild(tr);
 
     // вторая строка шапки и тело календаря
     for (var row = 0; dayNum < dayCount; row++) { // создавать строки, если в них есть хоть один день.
       var tr = document.createElement('tr');
-      table.appendChild(tr);
-      
+      tbody.appendChild(tr);
+
       for (var col = 0; col < 7; col++) {  // заполняем строку днями
         if (row == 0) {     
 		  // заполнение шапки календаря
@@ -76,6 +89,8 @@ function createCalendar(id, year, month) {
       }
       
     }
+
+    table.appendChild(tbody);
     parent.appendChild(table);
 
     changeDate(year, month, monthName2);
@@ -240,7 +255,7 @@ function getChar(event) {
         return String.fromCharCode(event.keyCode)
     }
 
-    if (event.which!=0 && event.charCode!=0) { // все кроме IE
+    if (event.which != 0 && event.charCode != 0) { // все кроме IE
         if (event.which < 32) return null; // спец. символ
         return String.fromCharCode(event.which); // остальные
     }
