@@ -63,7 +63,7 @@ function createCalendar(id, year, month) {
     for (var row = 0; dayNum < dayCount; row++) { // создавать строки, если в них есть хоть один день.
       var tr = document.createElement('tr');
       tbody.appendChild(tr);
-
+      tr.className = 'nowDate';
       for (var col = 0; col < 7; col++) {  // заполняем строку днями
         if (row == 0) {     
 		  // заполнение шапки календаря
