@@ -12,6 +12,7 @@
         window.onload = function(){
             createCalendar('calendar', now.getFullYear(), now.getMonth());
             workLeftMenu(now.getFullYear(), now.getMonth());
+            workTabs();
         };
         document.createElement('header');
         document.createElement('article');
@@ -47,11 +48,11 @@
             </section>
             <section id="task">
                 <ul>
-                    <li><a href="tab1">Запланированные</a></li>
-                    <li><a href="tab2">Выполненные</a></li>
+                    <li class="zIndex"><a href="tab1">Запланированные</a></li>
+                    <li id="last"><a href="tab2">Выполненные</a></li>
                 </ul>
-                <div id="tab1"></div>
-                <div id="tab2"></div>
+                <div id="tab1" class="active">1</div>
+                <div id="tab2">2</div>
             </section>
         </div>
         <footer>
