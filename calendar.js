@@ -286,6 +286,24 @@ function actualDate(year, month, day){
         actualDateSpan.innerHTML = day + ' ' + month + ' ' + year + ' г';
 }
 
+//Работа вкладок правой колонки
+
+function workTabs(){
+    var taskBox = document.getElementById('task');
+    taskBox.onclick = function(event){
+        var evt = event || window.event,
+            target = evt.target || evt.srcElement;
+        if(target.tagName == 'A'){
+            removeClass($('.zIndex'),'zIndex');
+            removeClass($('.active'),'active');
+            var href = target.getAttribute('href');
+            addClass(document.getElementById(href),'active');
+            addClass(target.parentNode,'zIndex');
+            return false;
+        }
+    }
+}
+
 document.onclick = function(event){
     closeMenu('curMonth', event);
     closeMenu('curKvartal', event);
@@ -293,3 +311,36 @@ document.onclick = function(event){
 };
 
 var now = new Date;
+
+//Обращение к элементу по селектору
+
+function $(selector){
+    return document.querySelector(selector);
+}
+
+//Функции для работы с классами
+
+function addClass(elem, cls) {
+    var el = (elem.className) ? elem.className.split(' ') : [];
+    for(var i = 0,len = el.length; i < len; i++){
+        if(el[i] == cls){continue};
+    };
+    el.push(cls);
+    elem.className = el.join(' ');
+}
+
+function removeClass(el, cls) {
+    var c = el.className.split(' ');
+    for (var i=0; i<c.length; i++) {
+        if (c[i] == cls) c.splice(i--, 1);
+    }
+
+    el.className = c.join(' ');
+}
+
+function hasClass(el, cls) {
+    for (var c = el.className.split(' '),i=c.length-1; i>=0; i--) {
+        if (c[i] == cls) return true;
+    }
+    return false;
+}
