@@ -36,16 +36,22 @@
             float:right;
             border:1px solid blue;
         }
+        span#actualData{
+            font-weight:bold;
+            font-size:1.2em;
+            display:block;
+            margin:0 0 0 140px;
+        }
         span#stateTask{
             border:1px solid red;
             display:block;
-            margin:3px 0 0 25px;
+            margin:-4px 0 0 25px;
         }
         .red{
-            background:url(../images/redCircle.png) 0 20% no-repeat;
+            background:url(../images/redCircle.png) 0 75% no-repeat;
         }
         .green{
-            background:url(../images/greenCircle.png) 0 20% no-repeat;
+            background:url(../images/greenCircle.png) 0 75% no-repeat;
         }
         div#middleSection{
             margin:20px 0 0 0;

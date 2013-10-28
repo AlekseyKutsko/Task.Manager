@@ -38,10 +38,10 @@ function createCalendar(id, year, month) {
     tr.appendChild(elem);
 
     // месяц год
-    var cell = nowDay + ' ' + monthName[date.getMonth()] + ' ' + date.getFullYear() + ' г';
+    var cel = nowDay + ' ' + monthName[date.getMonth()] + ' ' + date.getFullYear() + ' г';
     elem = document.createElement('th');
     elem.colSpan = 5;
-    elem.appendChild(document.createTextNode(cell));
+    elem.appendChild(document.createTextNode(cel));
     tr.appendChild(elem);
 
     // листать вправо
@@ -63,19 +63,21 @@ function createCalendar(id, year, month) {
     for (var row = 0; dayNum < dayCount; row++) { // создавать строки, если в них есть хоть один день.
       var tr = document.createElement('tr');
       tbody.appendChild(tr);
-      tr.className = 'nowDate';
+
       for (var col = 0; col < 7; col++) {  // заполняем строку днями
         if (row == 0) {     
 		  // заполнение шапки календаря
-          elem = document.createElement('th');
-          cell = weekDay[col];
+		  var cell = weekDay[col],
+              elem = document.createElement('th');
+              elem.className = 'nowDate';
           if(col > 4){
               elem.className = 'weekDays';
           }
         } else {
 		  // заполнение тела календаря
           dayNum++;
-          elem = document.createElement('td');
+          var elem = document.createElement('td');
+          elem.setAttribute('id', '1');
           elem.className = 'out';
           if ((dayNum > 0) && (dayNum <= dayCount)) {
             elem.className = 'day';
@@ -83,11 +85,23 @@ function createCalendar(id, year, month) {
           }
             cell = (new Date(year, month, dayNum)).getDate();
         }
+
+          //Отображение текущей даты
+          var cellYear = +cel.slice(-6, -2),
+              cellMonth = cel.slice(3,6);
+          if(now.getFullYear() == cellYear){
+              if(monthName[now.getMonth()].slice(0,3) == cellMonth){
+                 if(nowDay == dayNum){
+                     elem.className = 'nowDate';
+                 }
+              }
+          }
+
         // заполняем ячейку календаря
         elem.appendChild(document.createTextNode(cell));
-        tr.appendChild(elem);        
+        tr.appendChild(elem);
       }
-      
+
     }
 
     table.appendChild(tbody);
@@ -95,8 +109,10 @@ function createCalendar(id, year, month) {
 
     changeDate(year, month, monthName2);
 
+    actualDate(now.getFullYear(), monthName[now.getMonth()], nowDay);
+
  }
-     //вставка месяца, квартала, года в левое меню
+     //Левое меню
 
 function workLeftMenu(year, month){
      var date = new Date(year, month),
@@ -261,6 +277,13 @@ function getChar(event) {
     }
 
     return null; // спец. символ
+}
+
+//Текущая дата в шапке
+
+function actualDate(year, month, day){
+    var actualDateSpan = document.getElementById('actualData');
+        actualDateSpan.innerHTML = day + ' ' + month + ' ' + year + ' г';
 }
 
 document.onclick = function(event){
