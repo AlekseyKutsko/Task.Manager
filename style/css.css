@@ -174,6 +174,48 @@
         }
         section#task{
             width:266px;
+            position:relative;
+        }
+        #task > ul{
+            margin:2px 0 0 0;
+            padding:0 0 0 10px;
+        }
+        #task > ul li{
+            position:absolute;
+            padding:5px 10px;
+            background:url(../images/tab.png) no-repeat;
+            z-index:2;
+        }
+        #task > ul li#last{
+            background:url(../images/minTab.png) no-repeat;
+            left:140px;
+            z-index:1;
+        }
+        li.zIndex{
+            z-index:10 !important;
+        }
+        #task > ul li a{
+            text-decoration:none;
+            color:black;
+            font-size:15px;
+        }
+        #task div{
+            position:absolute;
+            top:29px;
+            left:5px;
+            border:2px solid;
+            width:95%;
+            z-index: 9;
+            height:89%;
+            background:#DFDFDF;
+            display:none;
+        }
+        @-moz-document url-prefix()
+            {
+            #task div {top:31px;}
+            }
+        .active{
+            display:block !important;
         }
         footer{
             height:55px;
