@@ -13,6 +13,8 @@
             createCalendar('calendar', now.getFullYear(), now.getMonth());
             workLeftMenu(now.getFullYear(), now.getMonth());
             workTabs();
+            clock();
+            popap();
         };
         document.createElement('header');
         document.createElement('article');
@@ -30,7 +32,7 @@
                 <h1>Менеджер задач</h1>
             </div>
             <div id="currentDate" class="green">
-                <span id="actualData"></span>
+                <span id="actualData"></span><span id="clock"></span>
                 <span id="stateTask"></span>
             </div>
             <div class="clear"></div>
@@ -45,6 +47,17 @@
             </section>
             <section id="sectionCalendar">
                 <div id="calendar"></div>
+                <div id="popap">
+                    <h2>Создание задачи</h2>
+                        <form id="createTask">
+                            <p><input type="text" name="task" value="Введите Вашу задачу"/></p>
+                            <p id="btnP">
+                                <input type="button" value="создать" class="btn2" />
+                                <input type="button" value="закрыть" id="closeBtn" class="btn2" />
+                            </p>
+                        </form>
+                        <span id="close"><img src="images/close.png" alt="" /></span>
+                </div>
             </section>
             <section id="task">
                 <ul>

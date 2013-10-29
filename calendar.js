@@ -77,7 +77,6 @@ function createCalendar(id, year, month) {
 		  // заполнение тела календаря
           dayNum++;
           var elem = document.createElement('td');
-          elem.setAttribute('id', '1');
           elem.className = 'out';
           if ((dayNum > 0) && (dayNum <= dayCount)) {
             elem.className = 'day';
@@ -318,6 +317,59 @@ function $(selector){
     return document.querySelector(selector);
 }
 
+//Часы
+
+function clock() {
+    var el = document.getElementById("clock");
+    var now = new Date();
+    el.innerHTML = now.toLocaleTimeString();
+    setTimeout(clock,1000);
+}
+
+//Popap
+
+function popap(){
+    var div = document.createElement('div'),
+        btnClose = document.getElementById('close'),
+        btnClose2 = document.getElementById('closeBtn'),
+        btnOpen = document.getElementById('name'),
+        textArea = $('div#popap form input[type="text"]'),
+        pop = document.getElementById('popap');
+    btnOpen.onclick = function(){
+        addClass(div,'popap');
+        pop.style.display = 'block';
+        document.documentElement.appendChild(div);
+        document.onmousewheel = document.onwheel = function() {
+            return false;
+        };
+    };
+
+    textArea.onfocus = function(){
+        this.style.color = 'black';
+        this.value = '';
+    };
+
+    textArea.onblur = function(){
+        this.style.color = 'silver';
+        this.value = 'Введите Вашу задачу';
+    };
+
+    btnClose.onclick = function(){
+        pop.style.display = 'none';
+        removeClass(div, 'popap');
+        document.documentElement.removeChild(div);
+        document.onmousewheel = document.onwheel = null;
+    };
+
+    btnClose2.onclick = function(){
+        pop.style.display = 'none';
+        removeClass(div, 'popap');
+        document.documentElement.removeChild(div);
+        document.onmousewheel = document.onwheel = null;
+    };
+
+}
+
 //Функции для работы с классами
 
 function addClass(elem, cls) {
@@ -325,6 +377,7 @@ function addClass(elem, cls) {
     for(var i = 0,len = el.length; i < len; i++){
         if(el[i] == cls){continue};
     };
+
     el.push(cls);
     elem.className = el.join(' ');
 }

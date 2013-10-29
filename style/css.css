@@ -31,6 +31,7 @@
             padding:0 0 0 30px;
         }
         div#currentDate{
+            position:relative;
             height:50px;
             width:300px;
             float:right;
@@ -40,12 +41,80 @@
             font-weight:bold;
             font-size:1.2em;
             display:block;
-            margin:0 0 0 140px;
+            margin:0 0 0 40px;
+        }
+        span#clock{
+            position:absolute;
+            left:210px;
+            top:0;
+            font-weight:bold;
+            font-size:1.2em;
         }
         span#stateTask{
             border:1px solid red;
             display:block;
             margin:-4px 0 0 25px;
+        }
+        .popap{
+            position:fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background:black;
+            opacity:.7;
+            z-index:44;
+            filter:progid:DXImageTransform.Microsoft.Alpha(opacity=70);
+        }
+        div#popap{
+            position:fixed;
+            top:50%;
+            left:50%;
+            margin:-165px 0 0 -260px;
+            display:none;
+            z-index:55;
+            width:520px;
+            height:250px;
+            background:#DFDFDF;
+            border-radius:10px;
+            border:1px solid;
+            box-shadow:1px 1px 2px white,
+                       -1px -1px 2px white;
+        }
+        span#close{
+            position:absolute;
+            top:-10px;
+            left:500px;
+            cursor:pointer;
+        }
+        div#popap h2{
+            text-align:center;
+        }
+        div#popap form input[type='text']{
+            width:400px;
+            height:40px;
+            margin:0 0 0 60px;
+            color:silver;
+            font-size:1.2em;
+        }
+        div#popap form p#btnP{
+            margin:50px 0 0 0;
+            text-align:center;
+        }
+        .btn2{
+            border:1px solid #000000;
+            border-radius:10px;
+            padding:4px 24px;
+            background-image:linear-gradient(silver, white);
+            background-color:silver;
+            cursor:pointer;
+        }
+        .btn2:hover{
+            background-image:linear-gradient(white, silver);
+            background-color:silver;
+        }
+        .btn2:active{
+            box-shadow:1px 1px 3px inset;
         }
         .red{
             background:url(../images/redCircle.png) 0 75% no-repeat;
