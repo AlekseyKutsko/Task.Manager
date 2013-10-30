@@ -105,12 +105,12 @@
             border:1px solid #000000;
             border-radius:10px;
             padding:4px 24px;
-            background-image:linear-gradient(silver, white);
+            background-image:linear-gradient(white, silver);
             background-color:silver;
             cursor:pointer;
         }
         .btn2:hover{
-            background-image:linear-gradient(white, silver);
+            background-image:linear-gradient(silver, white);
             background-color:silver;
         }
         .btn2:active{
@@ -234,7 +234,7 @@
         .right{
             background:url('../images/right.png') no-repeat;
         }
-        div#calendar table td.day:hover{
+        div#calendar table td:hover{
             background-color:silver;
             cursor:pointer;
         }

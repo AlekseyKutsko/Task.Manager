@@ -77,6 +77,9 @@ function createCalendar(id, year, month) {
 		  // заполнение тела календаря
           dayNum++;
           var elem = document.createElement('td');
+          //Отмена выделения
+          elem.onmousedown = function(){return false};
+          elem.onselectstart = function(){return false};
           elem.className = 'out';
           if ((dayNum > 0) && (dayNum <= dayCount)) {
             elem.className = 'day';
@@ -85,9 +88,9 @@ function createCalendar(id, year, month) {
             cell = (new Date(year, month, dayNum)).getDate();
         }
 
-          //Отображение текущей даты
-          var cellYear = +cel.slice(-6, -2),
-              cellMonth = cel.slice(3,6);
+          //Отображение текущей даты. cellYear, cellMonth - глобальные переменные
+          cellYear = +cel.slice(-6, -2);
+          cellMonth = cel.slice(3,6);
           if(now.getFullYear() == cellYear){
               if(monthName[now.getMonth()].slice(0,3) == cellMonth){
                  if(nowDay == dayNum){
@@ -303,6 +306,58 @@ function workTabs(){
     }
 }
 
+//Popap
+
+function popap(){
+    var div = document.createElement('div'),
+        btnClose = document.getElementById('close'),
+        btnOpen = document.getElementById('calendar'),
+        btnCreate = document.getElementById('createBtn'),
+        textArea = $('div#popap form input[type="text"]'),
+        pop = document.getElementById('popap');
+    btnOpen.ondblclick = function(event){
+        var evt = event || window.event,
+            target = evt.target || evt.srcElement;
+        if(target.tagName == 'TD'){
+            var textCont = target.textContent || target.innerText; //IE8(innerText)
+            addClass(div,'popap');
+            pop.style.display = 'block';
+            textArea.value = 'Введите Вашу задачу';
+            textArea.style.color = 'silver';
+            document.documentElement.appendChild(div);
+            document.onmousewheel = document.onwheel = function() {
+                return false;
+            };
+
+            btnCreate.onclick = function(){
+                for(var i = 0; i < monthName2.length; i++){
+                    if(monthName2[i].slice(0,3) == cellMonth){
+                        alert(+textCont + ' ' + (i + 1) + ' ' + cellYear);
+                        pop.style.display = 'none';
+                        removeClass(div, 'popap');
+                        document.documentElement.removeChild(div);
+                    }
+                }
+            };
+
+            btnClose.onclick = function(){
+                pop.style.display = 'none';
+                removeClass(div, 'popap');
+                document.documentElement.removeChild(div);
+                document.onmousewheel = document.onwheel = null;
+            };
+
+            textArea.onfocus = function(){
+                if(this.value == 'Введите Вашу задачу'){
+                    this.style.color = 'black';
+                    this.value = '';
+                }
+            };
+
+        }
+    };
+}
+
 document.onclick = function(event){
     closeMenu('curMonth', event);
     closeMenu('curKvartal', event);
@@ -324,50 +379,6 @@ function clock() {
     var now = new Date();
     el.innerHTML = now.toLocaleTimeString();
     setTimeout(clock,1000);
-}
-
-//Popap
-
-function popap(){
-    var div = document.createElement('div'),
-        btnClose = document.getElementById('close'),
-        btnClose2 = document.getElementById('closeBtn'),
-        btnOpen = document.getElementById('name'),
-        textArea = $('div#popap form input[type="text"]'),
-        pop = document.getElementById('popap');
-    btnOpen.onclick = function(){
-        addClass(div,'popap');
-        pop.style.display = 'block';
-        document.documentElement.appendChild(div);
-        document.onmousewheel = document.onwheel = function() {
-            return false;
-        };
-    };
-
-    textArea.onfocus = function(){
-        this.style.color = 'black';
-        this.value = '';
-    };
-
-    textArea.onblur = function(){
-        this.style.color = 'silver';
-        this.value = 'Введите Вашу задачу';
-    };
-
-    btnClose.onclick = function(){
-        pop.style.display = 'none';
-        removeClass(div, 'popap');
-        document.documentElement.removeChild(div);
-        document.onmousewheel = document.onwheel = null;
-    };
-
-    btnClose2.onclick = function(){
-        pop.style.display = 'none';
-        removeClass(div, 'popap');
-        document.documentElement.removeChild(div);
-        document.onmousewheel = document.onwheel = null;
-    };
-
 }
 
 //Функции для работы с классами
