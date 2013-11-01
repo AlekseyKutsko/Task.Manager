@@ -8,13 +8,8 @@
     monthHTML = document.getElementById('month'),//Месяц в лев.меню
     yearHTML = document.getElementById('year'),//год в лев.меню
     kvartalHTML = document.getElementById('kvartal'),//квартал в лев.меню
-    cellMonth;//месяц в шапке календаря
-
-if(window.localStorage){
+    cellMonth,//месяц в шапке календаря
     storage = window.localStorage;//локальное хранилище
-}else{
-    alert('No');
-}
 
 function createCalendar(id, year, month) {
     var weekDay = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'],
@@ -336,7 +331,9 @@ function popap(){
         pop = document.getElementById('popap');
     btnOpen.ondblclick = function(event){
         var evt = event || window.event,
-            target = evt.target || evt.srcElement;
+            target = evt.target || evt.srcElement,
+            firstTab = document.getElementById('firstTab'),
+            secondTab = document.getElementById('secondTab');
         if(target.tagName == 'TD'){
             var textCont = target.textContent || target.innerText; //IE8(innerText)
             addClass(div,'popap');
@@ -351,10 +348,16 @@ function popap(){
             btnCreate.onclick = function(){
                 for(var i = 0; i < monthName2.length; i++){
                     if(monthName2[i].slice(0,3) == cellMonth){
-                        alert(+textCont + ' ' + monthName[i] + ' ' + cellYear);
-                        pop.style.display = 'none';
-                        removeClass(div, 'popap');
-                        document.documentElement.removeChild(div);
+                        if(textArea.value == 'Введите Вашу задачу' || textArea.value == ''){
+                            alert('Поле для задачи пустое, введите Вашу задачу');
+                        }else{
+                            alert(+textCont + ' ' + monthName[i] + ' ' + cellYear);
+                            pop.style.display = 'none';
+                            removeClass(div, 'popap');
+                            document.documentElement.removeChild(div);
+
+                            workTask(firstTab, textArea);
+                        }
                     }
                 }
             };
@@ -376,6 +379,40 @@ function popap(){
         }
     };
 }
+
+//работа с задачами
+
+function workTask(first, txt){
+    var li = document.createElement('li'),
+        inputCheckBox = document.createElement('input'),
+        textTask = txt.value;
+    inputCheckBox.setAttribute('type', 'checkbox');
+    inputCheckBox.setAttribute('id', 'checkbox');
+
+    inputCheckBox.className = 'elemRight';
+    li.appendChild(document.createTextNode(textTask));
+    li.appendChild(inputCheckBox);
+    first.appendChild(li);
+
+    var checkBox = first.getElementsByTagName('input'),
+        collLi = first.getElementsByTagName('li');
+    for(var i = 0; i <= checkBox.length-1; i++)(function(i){
+        checkBox[i].onclick = function(){
+            er(this, collLi[i]);
+        }
+    })(i);
+}
+
+
+ function er(a, elem){
+     if(a.checked){
+         a.parentNode.parentNode.removeChild(elem);
+     }else{
+         alert('no')
+     }
+
+ }
+
 
 document.onclick = function(event){
     closeMenu('curMonth', event);

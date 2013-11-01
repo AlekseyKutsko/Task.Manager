@@ -186,7 +186,7 @@
         section#sectionCalendar{
             border:none !important;
             background-color:white !important;
-            width:504px;
+            width:470px;
             margin:0 10px;
         }
         div#calendar{
@@ -245,7 +245,7 @@
             background-color:#AFF0D9;
         }
         section#task{
-            width:266px;
+            width:302px;
             position:relative;
         }
         #task > ul{
@@ -281,6 +281,19 @@
             height:89%;
             background:#DFDFDF;
             display:none;
+        }
+        #task > div{
+            overflow:auto;
+        }
+        ol#firstTab li{
+            list-style:decimal;
+        }
+        ol#secondTab li{
+            list-style:decimal;
+        }
+        .elemRight{
+            float:right;
+            margin:0 10px 0 0;
         }
         @-moz-document url-prefix()
             {
