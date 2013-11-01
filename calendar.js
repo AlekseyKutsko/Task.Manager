@@ -5,9 +5,16 @@
     'июнь', 'июль', 'август', 'сентябрь',
     'октябрь', 'ноябрь', 'декабрь'],
     kvartalName = ['I', 'II', 'III', 'IV'],
-    monthHTML = document.getElementById('month'),
-    yearHTML = document.getElementById('year'),
-    kvartalHTML = document.getElementById('kvartal');
+    monthHTML = document.getElementById('month'),//Месяц в лев.меню
+    yearHTML = document.getElementById('year'),//год в лев.меню
+    kvartalHTML = document.getElementById('kvartal'),//квартал в лев.меню
+    cellMonth;//месяц в шапке календаря
+
+if(window.localStorage){
+    storage = window.localStorage;//локальное хранилище
+}else{
+    alert('No');
+}
 
 function createCalendar(id, year, month) {
     var weekDay = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'],
@@ -87,22 +94,34 @@ function createCalendar(id, year, month) {
           }
             cell = (new Date(year, month, dayNum)).getDate();
         }
-
-          //Отображение текущей даты. cellYear, cellMonth - глобальные переменные
-          cellYear = +cel.slice(-6, -2);
-          cellMonth = cel.slice(3,6);
-          if(now.getFullYear() == cellYear){
-              if(monthName[now.getMonth()].slice(0,3) == cellMonth){
-                 if(nowDay == dayNum){
-                     elem.className = 'nowDate';
-                 }
-              }
-          }
-
         // заполняем ячейку календаря
         elem.appendChild(document.createTextNode(cell));
         tr.appendChild(elem);
-      }
+
+        //Отображение текущей даты. cellYear, cellMonth - глобальные переменные
+          cellYear = +cel.slice(-6, -2);
+          if(elem.tagName == 'TD'){
+              if(elem.className == 'day'){
+                  switch(nowDay.toString().length){
+                      case 1 : {
+                          cellMonth = cel.slice(2,5);
+                          break;
+                      }
+                      case 2: {
+                          cellMonth = cel.slice(3,6);
+                          break;
+                      }
+                  }
+              }
+          }
+
+          if(now.getFullYear() == cellYear){
+              if(monthName2[now.getMonth()].slice(0,3) == cellMonth)
+                  if(nowDay == dayNum){
+                      elem.className = 'nowDate';
+                  }
+              }
+          }
 
     }
 
@@ -332,7 +351,7 @@ function popap(){
             btnCreate.onclick = function(){
                 for(var i = 0; i < monthName2.length; i++){
                     if(monthName2[i].slice(0,3) == cellMonth){
-                        alert(+textCont + ' ' + (i + 1) + ' ' + cellYear);
+                        alert(+textCont + ' ' + monthName[i] + ' ' + cellYear);
                         pop.style.display = 'none';
                         removeClass(div, 'popap');
                         document.documentElement.removeChild(div);
