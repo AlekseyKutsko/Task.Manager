@@ -351,12 +351,12 @@ function popap(){
                         if(textArea.value == 'Введите Вашу задачу' || textArea.value == ''){
                             alert('Поле для задачи пустое, введите Вашу задачу');
                         }else{
-                            alert(+textCont + ' ' + monthName[i] + ' ' + cellYear);
+                            //alert(+textCont + ' ' + monthName[i] + ' ' + cellYear);
                             pop.style.display = 'none';
                             removeClass(div, 'popap');
                             document.documentElement.removeChild(div);
 
-                            workTask(firstTab, textArea);
+                            workTask(firstTab, secondTab, textArea);
                         }
                     }
                 }
@@ -382,37 +382,59 @@ function popap(){
 
 //работа с задачами
 
-function workTask(first, txt){
+function workTask(first, second, txt){
     var li = document.createElement('li'),
         inputCheckBox = document.createElement('input'),
         textTask = txt.value;
     inputCheckBox.setAttribute('type', 'checkbox');
     inputCheckBox.setAttribute('id', 'checkbox');
-
     inputCheckBox.className = 'elemRight';
     li.appendChild(document.createTextNode(textTask));
     li.appendChild(inputCheckBox);
-    first.appendChild(li);
+    if(first.firstChild){
+        first.insertBefore(li, first.firstChild);
+    }else{
+        first.appendChild(li);
+    }
 
     var checkBox = first.getElementsByTagName('input'),
         collLi = first.getElementsByTagName('li');
-    for(var i = 0; i <= checkBox.length-1; i++)(function(i){
+        for(var i = 0; i <= checkBox.length-1; i++){
         checkBox[i].onclick = function(){
-            er(this, collLi[i]);
+            for(var j = 0; j <= checkBox.length-1; j++)(function(j){
+                checkBoxWork(checkBox[j], collLi[j], second);
+            })(j);
         }
-    })(i);
+    }
 }
 
+function checkBoxWork(a, elem, second){
+        if(a.checked){
+            secondTab(elem, second);
+            a.parentNode.parentNode.removeChild(elem);
+        }
+}
 
- function er(a, elem){
-     if(a.checked){
-         a.parentNode.parentNode.removeChild(elem);
-     }else{
-         alert('no')
-     }
-
- }
-
+function secondTab(elem, second){
+    var text = elem.textContent || elem.innerText,
+        li = document.createElement('li'),
+        btn = document.createElement('input');
+    btn.className = 'elemRight btn3';
+    btn.setAttribute('type', 'button');
+    btn.setAttribute('value', 'удалить');
+    li.appendChild(document.createTextNode(text));
+    li.appendChild(btn);
+    second.appendChild(li);
+    var btnDelete = second.getElementsByTagName('input'),
+        collLi = second.getElementsByTagName('li');
+    second.onclick = function(event){
+        var evt = event || window.event,
+            target = evt.target || evt.srcElement;
+        if(target.tagName == 'INPUT'){
+            target.parentNode.parentNode.removeChild(target.parentNode);
+        }
+    }
+}
 
 document.onclick = function(event){
     closeMenu('curMonth', event);

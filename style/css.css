@@ -280,7 +280,7 @@
             z-index: 9;
             height:89%;
             background:#DFDFDF;
-            display:none;
+            visibility:hidden;
         }
         #task > div{
             overflow:auto;
@@ -295,12 +295,28 @@
             float:right;
             margin:0 10px 0 0;
         }
+        .btn3{
+            height:18px;
+            padding:0 3px 10px 3px;
+            font-size:12px;
+            border:1px solid;
+            border-radius:5px;
+            background-color:white;
+        }
+        .btn3:hover{
+            cursor:pointer;
+            background:silver;
+            background:linear-gradient(white,silver);
+        }
+        .btn3:active{
+            box-shadow:1px 1px 3px inset;
+        }
         @-moz-document url-prefix()
             {
             #task div {top:31px;}
             }
         .active{
-            display:block !important;
+            visibility:visible !important;
         }
         footer{
             height:55px;
