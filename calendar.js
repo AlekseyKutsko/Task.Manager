@@ -9,7 +9,88 @@
     yearHTML = document.getElementById('year'),//год в лев.меню
     kvartalHTML = document.getElementById('kvartal'),//квартал в лев.меню
     cellMonth,//месяц в шапке календаря
-    storage = window.localStorage;//локальное хранилище
+    currDate, //выбранная дата
+    storage = window.localStorage,
+    locStorage = workLocStorage();
+//localStorage
+
+//сделать переход задачи в выполненные!!!!!!
+
+function getStorage(first, second){
+    if(storage){
+        for(var i = 0; i < storage.length; i++){
+            var get = JSON.parse(storage.getItem(storage.key(i)));
+            if(storage.key(i) == 'made'){continue}
+            var li = document.createElement('li'),
+                h4 = document.createElement('h4'),
+                ol = document.createElement('ol');
+            h4.appendChild(document.createTextNode(storage.key(i)));
+            li.appendChild(h4);
+            li.appendChild(ol);
+            ol.setAttribute('id', 'ol');
+            first.insertBefore(li, first.firstChild);
+
+            for(var j = 0; j < get.length; j++){
+                var li = document.createElement('li'),
+                    inputCheckBox = document.createElement('input');
+                inputCheckBox.setAttribute('type', 'checkbox');
+                inputCheckBox.setAttribute('id', 'checkbox');
+                inputCheckBox.className = 'elemRight';
+                li.appendChild(document.createTextNode(get[j]));
+                li.appendChild(inputCheckBox);
+                ol.appendChild(li);
+                var checkBox = first.getElementsByTagName('input');
+                    var collLi = first.getElementsByTagName('li');
+                for(var q = 0; q < collLi.length; q++){
+                    if(collLi[q].parentNode.getAttribute('id') == 'ol'){
+                        alert(collLi[q])
+                    }
+
+
+
+                }
+
+
+                    first.onclick = function(event){
+                        var evt = event || window.event,
+                            target = evt.target || evt.srcElement;
+                        if(target.tagName == 'INPUT'){
+                            var ol = target.parentNode.parentNode.childNodes,
+                                txtLi = target.parentNode.textContent||target.parentNode.innerText;
+                            for(var k = 0; k < ol.length; k++){
+                                var txtOl = ol[k].textContent || ol[k].innerText;
+                                if(txtOl == txtLi){
+                                    checkBoxWork(checkBox[k], collLi[k], second);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+}
+
+function workLocStorage(){
+    var arr = [];
+    return function(data, txt){
+        if(storage.getItem(data)){
+            arr = JSON.parse(storage.getItem(data));
+            arr.push(txt);
+            storage.setItem(data, JSON.stringify(arr));
+        }else{
+            arr = [];
+            arr.push(txt);
+            storage.setItem(data, JSON.stringify(arr));
+        }
+    };
+}
+
+function deleteLocStorage(numb, name){
+    var arr = JSON.parse(storage.getItem(name));
+    arr.splice(numb-1,1);
+    storage.setItem(name, JSON.stringify(arr));
+
+}
 
 function createCalendar(id, year, month) {
     var weekDay = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'],
@@ -351,11 +432,10 @@ function popap(){
                         if(textArea.value == 'Введите Вашу задачу' || textArea.value == ''){
                             alert('Поле для задачи пустое, введите Вашу задачу');
                         }else{
-                            //alert(+textCont + ' ' + monthName[i] + ' ' + cellYear);
+                            currDate = +textCont + '.' + (i+1) + '.' + cellYear;//текущая дата, глобальная переменная
                             pop.style.display = 'none';
                             removeClass(div, 'popap');
                             document.documentElement.removeChild(div);
-
                             workTask(firstTab, secondTab, textArea);
                         }
                     }
@@ -384,28 +464,24 @@ function popap(){
 
 function workTask(first, second, txt){
     var li = document.createElement('li'),
+        li2 = document.createElement('li'),
+        ol = document.createElement('ol'),
+        h4 = document.createElement('h4'),
         inputCheckBox = document.createElement('input'),
         textTask = txt.value;
     inputCheckBox.setAttribute('type', 'checkbox');
     inputCheckBox.setAttribute('id', 'checkbox');
     inputCheckBox.className = 'elemRight';
-    li.appendChild(document.createTextNode(textTask));
-    li.appendChild(inputCheckBox);
-    if(first.firstChild){
-        first.insertBefore(li, first.firstChild);
-    }else{
-        first.appendChild(li);
-    }
+    first.appendChild(li);
+    h4.appendChild(document.createTextNode(currDate.toString()));
+    li.appendChild(h4);
+    li.appendChild(ol);
+    ol.appendChild(li2);
+    li2.appendChild(document.createTextNode(textTask));
+    li2.appendChild(inputCheckBox);
+    locStorage(currDate.toString(), textTask);
 
-    var checkBox = first.getElementsByTagName('input'),
-        collLi = first.getElementsByTagName('li');
-        for(var i = 0; i <= checkBox.length-1; i++){
-        checkBox[i].onclick = function(){
-            for(var j = 0; j <= checkBox.length-1; j++)(function(j){
-                checkBoxWork(checkBox[j], collLi[j], second);
-            })(j);
-        }
-    }
+
 }
 
 function checkBoxWork(a, elem, second){
@@ -425,12 +501,23 @@ function secondTab(elem, second){
     li.appendChild(document.createTextNode(text));
     li.appendChild(btn);
     second.appendChild(li);
+    locStorage('made', text);
+
     var btnDelete = second.getElementsByTagName('input'),
         collLi = second.getElementsByTagName('li');
     second.onclick = function(event){
         var evt = event || window.event,
             target = evt.target || evt.srcElement;
         if(target.tagName == 'INPUT'){
+            var ol = target.parentNode.parentNode.childNodes,
+                txtLi = target.parentNode.textContent||target.parentNode.innerText;
+
+            for(var i = 0; i < ol.length; i++){
+                var txtOl = ol[i].textContent || ol[i].innerText;
+                if(txtOl == txtLi){
+                    deleteLocStorage(i, 'made');
+                }
+            }
             target.parentNode.parentNode.removeChild(target.parentNode);
         }
     }

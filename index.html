@@ -15,6 +15,7 @@
             workTabs();
             clock();
             popap();
+            getStorage(document.getElementById('firstTab'), document.getElementById('secondTab'));
         };
         document.createElement('header');
         document.createElement('article');
@@ -64,9 +65,9 @@
                     <li id="last"><a href="tab2">Выполненные</a></li>
                 </ul>
                 <div id="tab1" class="active">
-                    <ol id="firstTab">
+                    <ul id="firstTab">
 
-                    </ol>
+                    </ul>
                 </div>
                 <div id="tab2">
                     <ol id="secondTab">

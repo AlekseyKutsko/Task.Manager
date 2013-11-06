@@ -9,6 +9,14 @@
         *{
             outline:none;
         }
+        div#tab1 > ul, div#tab1 ol{
+            padding:0;
+            margin:0 0 0 10px;
+        }
+        div#tab1 ol li{
+            list-style:decimal;
+            margin:0 0 0 10px;
+        }
         li{
             list-style:none;
         }
@@ -285,15 +293,15 @@
         #task > div{
             overflow:auto;
         }
-        ol#firstTab li{
-            list-style:decimal;
-        }
         ol#secondTab li{
             list-style:decimal;
         }
         .elemRight{
             float:right;
             margin:0 10px 0 0;
+        }
+        #checkbox{
+            margin-top:3px;
         }
         .btn3{
             height:18px;
@@ -331,4 +339,8 @@
         }
         div.clear{
             clear:both;
+        }
+        h4{
+            padding:0;
+            margin:0;
         }
