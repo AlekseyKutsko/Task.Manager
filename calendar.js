@@ -12,9 +12,10 @@
     currDate, //выбранная дата
     storage = window.localStorage,
     locStorage = workLocStorage();
+
 //localStorage
 
-//сделать переход задачи в выполненные!!!!!!
+//заполнение из хранилища вкладки запланированные
 
 function getStorage(first, second){
     if(storage){
@@ -39,28 +40,20 @@ function getStorage(first, second){
                 li.appendChild(document.createTextNode(get[j]));
                 li.appendChild(inputCheckBox);
                 ol.appendChild(li);
-                var checkBox = first.getElementsByTagName('input');
-                    var collLi = first.getElementsByTagName('li');
-                for(var q = 0; q < collLi.length; q++){
-                    if(collLi[q].parentNode.getAttribute('id') == 'ol'){
-                        alert(collLi[q])
-                    }
-
-
-
-                }
-
 
                     first.onclick = function(event){
                         var evt = event || window.event,
                             target = evt.target || evt.srcElement;
                         if(target.tagName == 'INPUT'){
                             var ol = target.parentNode.parentNode.childNodes,
+                                h4 = target.parentNode.parentNode.previousSibling,
+                                h4Txt = h4.textContent || h4.innerText,
                                 txtLi = target.parentNode.textContent||target.parentNode.innerText;
                             for(var k = 0; k < ol.length; k++){
                                 var txtOl = ol[k].textContent || ol[k].innerText;
                                 if(txtOl == txtLi){
-                                    checkBoxWork(checkBox[k], collLi[k], second);
+                                    checkBoxWork(target, target.parentNode, second);
+                                    deleteLocStorage(k+1, h4Txt);
                                 }
                             }
                         }
@@ -68,6 +61,40 @@ function getStorage(first, second){
                 }
             }
         }
+}
+
+//заполнение из хранилища вкладки выполненные
+
+function storageSecond(second){
+    if(storage.getItem('made')){
+        var get = JSON.parse(storage.getItem('made'));
+        for(var i = 0; i < get.length; i++){
+            var li = document.createElement('li'),
+                btn = document.createElement('input');
+            btn.className = 'elemRight btn3';
+            btn.setAttribute('type', 'button');
+            btn.setAttribute('value', 'удалить');
+            li.appendChild(document.createTextNode(get[i]));
+            li.appendChild(btn);
+            second.appendChild(li);
+            second.onclick = function(event){
+                var evt = event || window.event,
+                    target = evt.target || evt.srcElement;
+                if(target.tagName == 'INPUT'){
+                    var ol = target.parentNode.parentNode.childNodes,
+                        txtLi = target.parentNode.textContent||target.parentNode.innerText;
+
+                    for(var i = 0; i < ol.length; i++){
+                        var txtOl = ol[i].textContent || ol[i].innerText;
+                        if(txtOl == txtLi){
+                            deleteLocStorage(i, 'made');
+                        }
+                    }
+                    target.parentNode.parentNode.removeChild(target.parentNode);
+                }
+            }
+        }
+    }
 }
 
 function workLocStorage(){
@@ -89,7 +116,9 @@ function deleteLocStorage(numb, name){
     var arr = JSON.parse(storage.getItem(name));
     arr.splice(numb-1,1);
     storage.setItem(name, JSON.stringify(arr));
-
+    if(arr.length == 0){
+        storage.removeItem(name);
+    }
 }
 
 function createCalendar(id, year, month) {
@@ -436,6 +465,10 @@ function popap(){
                             pop.style.display = 'none';
                             removeClass(div, 'popap');
                             document.documentElement.removeChild(div);
+                            document.onmousewheel = document.onwheel = function() {
+                                return true;
+                            };
+
                             workTask(firstTab, secondTab, textArea);
                         }
                     }
@@ -472,22 +505,65 @@ function workTask(first, second, txt){
     inputCheckBox.setAttribute('type', 'checkbox');
     inputCheckBox.setAttribute('id', 'checkbox');
     inputCheckBox.className = 'elemRight';
-    first.appendChild(li);
-    h4.appendChild(document.createTextNode(currDate.toString()));
-    li.appendChild(h4);
-    li.appendChild(ol);
-    ol.appendChild(li2);
-    li2.appendChild(document.createTextNode(textTask));
-    li2.appendChild(inputCheckBox);
-    locStorage(currDate.toString(), textTask);
+    if(first.children.length == 0){
+        first.appendChild(li);
+        h4.appendChild(document.createTextNode(currDate.toString()));
+        li.appendChild(h4);
+        li.appendChild(ol);
+        ol.appendChild(li2);
+        li2.appendChild(document.createTextNode(textTask));
+        li2.appendChild(inputCheckBox);
+        locStorage(currDate.toString(), textTask);
+    }else{
+        var collH4 = first.getElementsByTagName('h4'),
+            lastH4 = collH4.length - 1;
+        for(var w = 0; w < collH4.length; w++){
+            var txtH4 = collH4[w].textContent || collH4[w].innerText;
+            alert(collH4.length);
+            if(txtH4 == currDate.toString()){
+                collH4[w].nextSibling.appendChild(li2);
+                li2.appendChild(document.createTextNode(textTask));
+                li2.appendChild(inputCheckBox);
+                locStorage(currDate.toString(), textTask);
+            }else{
+
+                //!!!!!!!!!!!!!!!
+                continue;
+            }
 
 
+
+
+        }
+    }
+
+    first.onclick = function(event){
+        var evt = event || window.event,
+            target = evt.target || evt.srcElement;
+        if(target.tagName == 'INPUT'){
+            var ol = target.parentNode.parentNode.childNodes,
+                h4 = target.parentNode.parentNode.previousSibling,
+                h4Txt = h4.textContent || h4.innerText,
+                txtLi = target.parentNode.textContent||target.parentNode.innerText;
+            for(var k = 0; k < ol.length; k++){
+                var txtOl = ol[k].textContent || ol[k].innerText;
+                if(txtOl == txtLi){
+                    checkBoxWork(target, target.parentNode, second);
+                    deleteLocStorage(k+1, h4Txt);
+                }
+            }
+        }
+    }
 }
 
 function checkBoxWork(a, elem, second){
         if(a.checked){
             secondTab(elem, second);
-            a.parentNode.parentNode.removeChild(elem);
+            if(a.parentNode.parentNode.children.length <= 1){
+                a.parentNode.parentNode.parentNode.parentNode.removeChild(elem.parentNode.parentNode);
+            }else{
+                a.parentNode.parentNode.removeChild(elem);
+            }
         }
 }
 
@@ -503,8 +579,6 @@ function secondTab(elem, second){
     second.appendChild(li);
     locStorage('made', text);
 
-    var btnDelete = second.getElementsByTagName('input'),
-        collLi = second.getElementsByTagName('li');
     second.onclick = function(event){
         var evt = event || window.event,
             target = evt.target || evt.srcElement;

@@ -293,6 +293,9 @@
         #task > div{
             overflow:auto;
         }
+        ol#secondTab{
+            padding:0 0 0 30px;
+        }
         ol#secondTab li{
             list-style:decimal;
         }
