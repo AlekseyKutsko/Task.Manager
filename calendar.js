@@ -10,42 +10,62 @@
     kvartalHTML = document.getElementById('kvartal'),//квартал в лев.меню
     cellMonth,//месяц в шапке календаря
     currDate, //выбранная дата
+    currMonthYear, //текущие месяц и год
+    actualDat, //сегодняшняя полняя дата
     storage = window.localStorage,
     locStorage = workLocStorage();
-
 //localStorage
+
+//
+
+function state(data, circleBox, msg){
+    if(data == actualDat){
+        removeClass(circleBox, 'green');
+        addClass(circleBox, 'red');
+        msg.innerHTML = 'На сегодня есть задачи';
+    }else{
+
+    }
+}
 
 //заполнение из хранилища вкладки запланированные
 
 function getStorage(first, second){
     if(storage){
         for(var i = 0; i < storage.length; i++){
-            var get = JSON.parse(storage.getItem(storage.key(i)));
-            if(storage.key(i) == 'made'){continue}
-            var li = document.createElement('li'),
-                h4 = document.createElement('h4'),
-                ol = document.createElement('ol');
-            h4.appendChild(document.createTextNode(storage.key(i)));
-            li.appendChild(h4);
-            li.appendChild(ol);
-            ol.setAttribute('id', 'ol');
-            first.insertBefore(li, first.firstChild);
+            var get = JSON.parse(storage.getItem(storage.key(i))),
+                data = storage.key(i),
+                circle = document.getElementById('currentDate'),
+                msgBox = document.getElementById('stateTask');
+            if(storage.key(i) == 'made'){continue};
 
-            for(var j = 0; j < get.length; j++){
+
+
+            if(currMonthYear == storageMonthYear(storage.key(i))){
                 var li = document.createElement('li'),
-                    inputCheckBox = document.createElement('input');
-                inputCheckBox.setAttribute('type', 'checkbox');
-                inputCheckBox.setAttribute('id', 'checkbox');
-                inputCheckBox.className = 'elemRight';
-                li.appendChild(document.createTextNode(get[j]));
-                li.appendChild(inputCheckBox);
-                ol.appendChild(li);
+                    h4 = document.createElement('h4'),
+                    ol = document.createElement('ol');
+                h4.appendChild(document.createTextNode(storage.key(i)));
+                li.appendChild(h4);
+                li.appendChild(ol);
+                ol.setAttribute('id', 'ol');
+                first.insertBefore(li, first.firstChild);
+
+                for(var j = 0; j < get.length; j++){
+                    var li = document.createElement('li'),
+                        inputCheckBox = document.createElement('input');
+                    inputCheckBox.setAttribute('type', 'checkbox');
+                    inputCheckBox.setAttribute('id', 'checkbox');
+                    inputCheckBox.className = 'elemRight';
+                    li.appendChild(document.createTextNode(get[j]));
+                    li.appendChild(inputCheckBox);
+                    ol.appendChild(li);
 
                     first.onclick = function(event){
                         var evt = event || window.event,
                             target = evt.target || evt.srcElement;
                         if(target.tagName == 'INPUT'){
-                            var ol = target.parentNode.parentNode.childNodes,
+                            var ol = target.parentNode.parentNode.children,
                                 h4 = target.parentNode.parentNode.previousSibling,
                                 h4Txt = h4.textContent || h4.innerText,
                                 txtLi = target.parentNode.textContent||target.parentNode.innerText;
@@ -53,7 +73,7 @@ function getStorage(first, second){
                                 var txtOl = ol[k].textContent || ol[k].innerText;
                                 if(txtOl == txtLi){
                                     checkBoxWork(target, target.parentNode, second);
-                                    deleteLocStorage(k+1, h4Txt);
+                                    deleteLocStorage(k, h4Txt);
                                 }
                             }
                         }
@@ -61,6 +81,7 @@ function getStorage(first, second){
                 }
             }
         }
+    }
 }
 
 //заполнение из хранилища вкладки выполненные
@@ -81,9 +102,8 @@ function storageSecond(second){
                 var evt = event || window.event,
                     target = evt.target || evt.srcElement;
                 if(target.tagName == 'INPUT'){
-                    var ol = target.parentNode.parentNode.childNodes,
+                    var ol = target.parentNode.parentNode.children,
                         txtLi = target.parentNode.textContent||target.parentNode.innerText;
-
                     for(var i = 0; i < ol.length; i++){
                         var txtOl = ol[i].textContent || ol[i].innerText;
                         if(txtOl == txtLi){
@@ -114,7 +134,7 @@ function workLocStorage(){
 
 function deleteLocStorage(numb, name){
     var arr = JSON.parse(storage.getItem(name));
-    arr.splice(numb-1,1);
+    arr.splice(numb,1);
     storage.setItem(name, JSON.stringify(arr));
     if(arr.length == 0){
         storage.removeItem(name);
@@ -138,6 +158,7 @@ function createCalendar(id, year, month) {
     // листать влево
     var button = document.createElement("button");
     button.className = 'btn left';
+    button.setAttribute('id', 'leftBtn');
     button.setAttribute('onclick', 'createCalendar("calendar", ' + year + ', ' + (month - 1) + ')');
     //для IE7
     if(button.onclick != "createCalendar('calendar', ' + year + ', ' + (month - 1) + ')"){
@@ -159,7 +180,9 @@ function createCalendar(id, year, month) {
     // листать вправо
     button = document.createElement("button");
     button.className = 'btn right';
+    button.setAttribute('id', 'rightBtn');
     button.setAttribute('onclick', 'createCalendar("calendar", ' + year + ', ' + (month + 1) + ')');
+
     //для IE7
     if(button.onclick != "createCalendar('calendar', ' + year + ', ' + (month + 1) + ')"){
         button.onclick = function(){
@@ -230,6 +253,12 @@ function createCalendar(id, year, month) {
 
     }
 
+    for(var a = 0; a < monthName2.length; a++){
+        if(monthName2[a].slice(0,3) == cellMonth){
+            var x = monthNumber(a+1);
+            currMonthYear = x + '.' + cellYear;
+        }
+    }
     table.appendChild(tbody);
     parent.appendChild(table);
 
@@ -237,7 +266,10 @@ function createCalendar(id, year, month) {
 
     actualDate(now.getFullYear(), monthName[now.getMonth()], nowDay);
 
- }
+    document.getElementById('firstTab').innerHTML = '';
+
+    getStorage(document.getElementById('firstTab'), document.getElementById('secondTab'));
+}
      //Левое меню
 
 function workLeftMenu(year, month){
@@ -267,9 +299,11 @@ function workLeftMenu(year, month){
                     var evt = event || window.event,
                         textCont = yearHTML.textContent || yearHTML.innerText; //IE8(innerText)
                     evt.stopPropagation ? evt.stopPropagation() : (evt.cancelBubble = true);
-                        createCalendar('calendar', +textCont, i);
-                        changeDate(+textCont, i, monthName2);
-                        this.parentNode.parentNode.removeChild(ul);
+                    createCalendar('calendar', +textCont, i);
+                    changeDate(+textCont, i, monthName2);
+                    this.parentNode.parentNode.removeChild(ul);
+                    document.getElementById('firstTab').innerHTML = '';
+                    getStorage(document.getElementById('firstTab'), document.getElementById('secondTab'));
                  };
              })(i);
          }
@@ -343,6 +377,8 @@ function workLeftMenu(year, month){
                             createCalendar('calendar', +currYear.value, i);
                             changeDate(+currYear.value, i, monthName2);
                             txt.parentNode.removeChild(txt);
+                            document.getElementById('firstTab').innerHTML = '';
+                            getStorage(document.getElementById('firstTab'), document.getElementById('secondTab'));
                         }
                     }
                 }
@@ -388,7 +424,6 @@ function closeMenu(id, event){
         }
     }
 }
-
 
 // event.type должен быть keypress
 function getChar(event) {
@@ -461,7 +496,9 @@ function popap(){
                         if(textArea.value == 'Введите Вашу задачу' || textArea.value == ''){
                             alert('Поле для задачи пустое, введите Вашу задачу');
                         }else{
-                            currDate = +textCont + '.' + (i+1) + '.' + cellYear;//текущая дата, глобальная переменная
+                            var x = monthNumber(i+1);
+                            currDate = textCont + '.' + x + '.' + cellYear;//текущая дата, глобальная переменная
+                            currMonthYear = x + '.' + cellYear;
                             pop.style.display = 'none';
                             removeClass(div, 'popap');
                             document.documentElement.removeChild(div);
@@ -496,64 +533,10 @@ function popap(){
 //работа с задачами
 
 function workTask(first, second, txt){
-    var li = document.createElement('li'),
-        li2 = document.createElement('li'),
-        ol = document.createElement('ol'),
-        h4 = document.createElement('h4'),
-        inputCheckBox = document.createElement('input'),
-        textTask = txt.value;
-    inputCheckBox.setAttribute('type', 'checkbox');
-    inputCheckBox.setAttribute('id', 'checkbox');
-    inputCheckBox.className = 'elemRight';
-    if(first.children.length == 0){
-        first.appendChild(li);
-        h4.appendChild(document.createTextNode(currDate.toString()));
-        li.appendChild(h4);
-        li.appendChild(ol);
-        ol.appendChild(li2);
-        li2.appendChild(document.createTextNode(textTask));
-        li2.appendChild(inputCheckBox);
-        locStorage(currDate.toString(), textTask);
-    }else{
-        var collH4 = first.getElementsByTagName('h4'),
-            lastH4 = collH4.length - 1;
-        for(var w = 0; w < collH4.length; w++){
-            var txtH4 = collH4[w].textContent || collH4[w].innerText;
-            alert(collH4.length);
-            if(txtH4 == currDate.toString()){
-                collH4[w].nextSibling.appendChild(li2);
-                li2.appendChild(document.createTextNode(textTask));
-                li2.appendChild(inputCheckBox);
-                locStorage(currDate.toString(), textTask);
-            }else{
-
-                //!!!!!!!!!!!!!!!
-                continue;
-            }
-
-
-
-
-        }
-    }
-
-    first.onclick = function(event){
-        var evt = event || window.event,
-            target = evt.target || evt.srcElement;
-        if(target.tagName == 'INPUT'){
-            var ol = target.parentNode.parentNode.childNodes,
-                h4 = target.parentNode.parentNode.previousSibling,
-                h4Txt = h4.textContent || h4.innerText,
-                txtLi = target.parentNode.textContent||target.parentNode.innerText;
-            for(var k = 0; k < ol.length; k++){
-                var txtOl = ol[k].textContent || ol[k].innerText;
-                if(txtOl == txtLi){
-                    checkBoxWork(target, target.parentNode, second);
-                    deleteLocStorage(k+1, h4Txt);
-                }
-            }
-        }
-    }
+    var textTask = txt.value;
+    first.innerHTML = '';
+    locStorage(currDate, textTask);
+    getStorage(first, second);
 }
 
 function checkBoxWork(a, elem, second){
@@ -568,33 +551,10 @@ function checkBoxWork(a, elem, second){
 }
 
 function secondTab(elem, second){
-    var text = elem.textContent || elem.innerText,
-        li = document.createElement('li'),
-        btn = document.createElement('input');
-    btn.className = 'elemRight btn3';
-    btn.setAttribute('type', 'button');
-    btn.setAttribute('value', 'удалить');
-    li.appendChild(document.createTextNode(text));
-    li.appendChild(btn);
-    second.appendChild(li);
+    var text = elem.textContent || elem.innerText;
+    second.innerHTML = '';
     locStorage('made', text);
-
-    second.onclick = function(event){
-        var evt = event || window.event,
-            target = evt.target || evt.srcElement;
-        if(target.tagName == 'INPUT'){
-            var ol = target.parentNode.parentNode.childNodes,
-                txtLi = target.parentNode.textContent||target.parentNode.innerText;
-
-            for(var i = 0; i < ol.length; i++){
-                var txtOl = ol[i].textContent || ol[i].innerText;
-                if(txtOl == txtLi){
-                    deleteLocStorage(i, 'made');
-                }
-            }
-            target.parentNode.parentNode.removeChild(target.parentNode);
-        }
-    }
+    storageSecond(second);
 }
 
 document.onclick = function(event){
@@ -602,8 +562,6 @@ document.onclick = function(event){
     closeMenu('curKvartal', event);
     closeMenu('curYear', event)
 };
-
-var now = new Date;
 
 //Обращение к элементу по селектору
 
@@ -619,6 +577,10 @@ function clock() {
     el.innerHTML = now.toLocaleTimeString();
     setTimeout(clock,1000);
 }
+
+var now = new Date;
+
+actualDat = now.getDate() + '.' + monthNumber(now.getMonth()+1) + '.' + now.getFullYear();
 
 //Функции для работы с классами
 
@@ -646,4 +608,29 @@ function hasClass(el, cls) {
         if (c[i] == cls) return true;
     }
     return false;
+}
+
+function monthNumber(i){
+    var x = i.toString();
+    if(x.length == 1){
+        return '0' + x;
+    }else{
+        return x;
+    }
+}
+
+function storageMonthYear(elem){
+    if(elem.length == 9){
+        return elem.slice(2,9);
+    }else{
+        return elem.slice(3,10);
+    }
+}
+
+function addEvent(elem, type, handler){
+    if (elem.addEventListener){
+        elem.addEventListener(type, handler, false)
+    } else {
+        elem.attachEvent("on"+type, handler)
+    }
 }
