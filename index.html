@@ -16,6 +16,7 @@
             clock();
             popap();
             storageSecond(document.getElementById('secondTab'));
+            state(document.getElementById('currentDate'), document.getElementById('stateTask'))
         };
         document.createElement('header');
         document.createElement('article');
@@ -32,7 +33,7 @@
             <div id="name">
                 <h1>Менеджер задач</h1>
             </div>
-            <div id="currentDate" class="green">
+            <div id="currentDate">
                 <span id="actualData"></span><span id="clock"></span>
                 <span id="stateTask"></span>
             </div>
@@ -48,6 +49,7 @@
             </section>
             <section id="sectionCalendar">
                 <div id="calendar"></div>
+                <div id="kvartalCalendars"></div>
                 <div id="popap">
                     <h2>Создание задачи</h2>
                         <form id="createTask">
@@ -76,6 +78,7 @@
                 </div>
             </section>
         </div>
+        <div class="clear"></div>
         <footer>
             <p>Kutsko Incorporation &copy;, 2013</p>
         </footer>

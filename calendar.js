@@ -16,15 +16,20 @@
     locStorage = workLocStorage();
 //localStorage
 
-//
+//Состояние выполненных задач на сегодня
 
-function state(data, circleBox, msg){
-    if(data == actualDat){
-        removeClass(circleBox, 'green');
-        addClass(circleBox, 'red');
-        msg.innerHTML = 'На сегодня есть задачи';
-    }else{
-
+function state(circleBox, msg){
+    msg.innerHTML = 'На сегодня нет задач';
+    addClass(circleBox, 'green');
+    if(storage){
+        for(var i = 0; i < storage.length; i++){
+            var data = storage.key(i);
+            if(data == actualDat){
+                removeClass(circleBox, 'green');
+                addClass(circleBox, 'red');
+                msg.innerHTML = 'На сегодня есть задачи';
+            }
+        }
     }
 }
 
@@ -34,12 +39,11 @@ function getStorage(first, second){
     if(storage){
         for(var i = 0; i < storage.length; i++){
             var get = JSON.parse(storage.getItem(storage.key(i))),
-                data = storage.key(i),
                 circle = document.getElementById('currentDate'),
                 msgBox = document.getElementById('stateTask');
             if(storage.key(i) == 'made'){continue};
 
-
+            state(circle, msgBox);
 
             if(currMonthYear == storageMonthYear(storage.key(i))){
                 var li = document.createElement('li'),
@@ -147,11 +151,14 @@ function createCalendar(id, year, month) {
         dayCount = (new Date(year, month + 1, 0)).getDate(),
         dayNum = 1 - (date.getDay() == 0 ? 7 : date.getDay()),
         nowDay = now.getDate(),
+        sectionKvCal = document.getElementById('kvartalCalendars'),
         parent = document.getElementById(id);
+    parent.className = 'calendar';
     parent.innerHTML = '';
+    sectionKvCal.style.display = 'none';
     var table = document.createElement('table'),
         tbody = document.createElement('tbody');
-
+    document.getElementById('calendar').style.display = 'block';
     // первая строка шапки календаря
     var tr = document.createElement('tr');
     tr.className = 'borderBottom';
@@ -204,7 +211,7 @@ function createCalendar(id, year, month) {
 		  // заполнение шапки календаря
 		  var cell = weekDay[col],
               elem = document.createElement('th');
-              elem.className = 'nowDate';
+              elem.className = 'silver';
           if(col > 4){
               elem.className = 'weekDays';
           }
@@ -324,12 +331,22 @@ function workLeftMenu(year, month){
 
                 currKvartal.onclick = function(event){
                     var evt = event || window.event,
+                        sectionKvCal = document.getElementById('kvartalCalendars'),
                         textCont = yearHTML.textContent || yearHTML.innerText; //IE8(innerText)
                     evt.stopPropagation ? evt.stopPropagation() : (evt.cancelBubble = true);
+                    sectionKvCal.innerHTML = '';
                     switch(i){
                         case 0: {
-                            createCalendar('calendar', +textCont, i);
-                            changeDate(+textCont, i, monthName2);
+                             //!!!!!!!!!!!!!!!!!!!
+                            for(var j = 0; j < 3; j++){
+                                var divCalendar = document.createElement('div');
+                                divCalendar.setAttribute('id', 'calendar' + j.toString());
+                                sectionKvCal.appendChild(divCalendar);
+                                createCalendar('calendar' + j.toString(), +textCont, i + j);
+                                changeDate(+textCont, i, monthName2);
+                            }
+                            sectionKvCal.style.display = 'block';
+                            document.getElementById('calendar').style.display = 'none';
                             break;
                         }
                         case 1: {
@@ -502,10 +519,7 @@ function popap(){
                             pop.style.display = 'none';
                             removeClass(div, 'popap');
                             document.documentElement.removeChild(div);
-                            document.onmousewheel = document.onwheel = function() {
-                                return true;
-                            };
-
+                            document.onmousewheel = document.onwheel = null;
                             workTask(firstTab, secondTab, textArea);
                         }
                     }
@@ -534,8 +548,8 @@ function popap(){
 
 function workTask(first, second, txt){
     var textTask = txt.value;
-    first.innerHTML = '';
     locStorage(currDate, textTask);
+    first.innerHTML = '';
     getStorage(first, second);
 }
 
@@ -544,6 +558,18 @@ function checkBoxWork(a, elem, second){
             secondTab(elem, second);
             if(a.parentNode.parentNode.children.length <= 1){
                 a.parentNode.parentNode.parentNode.parentNode.removeChild(elem.parentNode.parentNode);
+
+                for(var i = 0; i < storage.length; i++){
+                    var data = storage.key(i),
+                        arr = JSON.parse(storage.getItem(data));
+                    if(data == actualDat){
+                        if(arr.length == 1){
+                            removeClass(document.getElementById('currentDate'), 'red');
+                            document.getElementById('stateTask').innerHTML = 'На сегодня нет задач';
+                            addClass(document.getElementById('currentDate'), 'green');
+                        }
+                    }
+                }
             }else{
                 a.parentNode.parentNode.removeChild(elem);
             }
