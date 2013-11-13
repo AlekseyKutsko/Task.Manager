@@ -65,21 +65,19 @@ function getStorage(first, second){
                     li.appendChild(inputCheckBox);
                     ol.appendChild(li);
 
-                    first.onclick = function(event){
+                    first.onmouseover = function(event){
                         var evt = event || window.event,
                             target = evt.target || evt.srcElement;
                         if(target.tagName == 'INPUT'){
                             var ol = target.parentNode.parentNode.children,
                                 h4 = target.parentNode.parentNode.previousSibling,
-                                h4Txt = h4.textContent || h4.innerText,
-                                txtLi = target.parentNode.textContent||target.parentNode.innerText;
-                            for(var k = 0; k < ol.length; k++){
-                                var txtOl = ol[k].textContent || ol[k].innerText;
-                                if(txtOl == txtLi){
-                                    checkBoxWork(target, target.parentNode, second);
-                                    deleteLocStorage(k, h4Txt);
+                                h4Txt = h4.textContent || h4.innerText;
+                            for(var k = 0; k < ol.length; k++)(function(k){
+                                ol[k].lastChild.onclick = function(){
+                                checkBoxWork(target, target.parentNode, second);
+                                deleteLocStorage(k, h4Txt);
                                 }
-                            }
+                            })(k);
                         }
                     }
                 }
@@ -102,19 +100,17 @@ function storageSecond(second){
             li.appendChild(document.createTextNode(get[i]));
             li.appendChild(btn);
             second.appendChild(li);
-            second.onclick = function(event){
+            second.onmouseover = function(event){
                 var evt = event || window.event,
                     target = evt.target || evt.srcElement;
                 if(target.tagName == 'INPUT'){
-                    var ol = target.parentNode.parentNode.children,
-                        txtLi = target.parentNode.textContent||target.parentNode.innerText;
-                    for(var i = 0; i < ol.length; i++){
-                        var txtOl = ol[i].textContent || ol[i].innerText;
-                        if(txtOl == txtLi){
+                    var ol = target.parentNode.parentNode.children;
+                    for(var i = 0; i < ol.length; i++)(function(i){
+                        ol[i].lastChild.onclick = function(){
                             deleteLocStorage(i, 'made');
+                            target.parentNode.parentNode.removeChild(target.parentNode);
                         }
-                    }
-                    target.parentNode.parentNode.removeChild(target.parentNode);
+                    })(i);
                 }
             }
         }
@@ -558,16 +554,13 @@ function checkBoxWork(a, elem, second){
             secondTab(elem, second);
             if(a.parentNode.parentNode.children.length <= 1){
                 a.parentNode.parentNode.parentNode.parentNode.removeChild(elem.parentNode.parentNode);
-
-                for(var i = 0; i < storage.length; i++){
-                    var data = storage.key(i),
-                        arr = JSON.parse(storage.getItem(data));
-                    if(data == actualDat){
-                        if(arr.length == 1){
-                            removeClass(document.getElementById('currentDate'), 'red');
-                            document.getElementById('stateTask').innerHTML = 'На сегодня нет задач';
-                            addClass(document.getElementById('currentDate'), 'green');
-                        }
+                var data = elem.parentNode.previousSibling.textContent || elem.parentNode.previousSibling.innerText,
+                    collLi = elem.parentNode.getElementsByTagName('li');
+                if(data == actualDat){
+                    if(collLi.length == 1){
+                        removeClass(document.getElementById('currentDate'), 'red');
+                        document.getElementById('stateTask').innerHTML = 'На сегодня нет задач';
+                        addClass(document.getElementById('currentDate'), 'green');
                     }
                 }
             }else{
