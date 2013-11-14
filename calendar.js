@@ -37,23 +37,22 @@ function state(circleBox, msg){
 
 function getStorage(first, second){
     if(storage){
+        var arrKeys = storageKeySort();
         for(var i = 0; i < storage.length; i++){
-            var get = JSON.parse(storage.getItem(storage.key(i))),
+            if(arrKeys[i] == 'made'){continue};
+
+            var get = JSON.parse(storage.getItem(arrKeys[i])),
                 circle = document.getElementById('currentDate'),
                 msgBox = document.getElementById('stateTask');
-            if(storage.key(i) == 'made'){continue};
-
-            state(circle, msgBox);
-
-            if(currMonthYear == storageMonthYear(storage.key(i))){
+            if(currMonthYear == arrKeys[i].slice(3,10)){
                 var li = document.createElement('li'),
                     h4 = document.createElement('h4'),
                     ol = document.createElement('ol');
-                h4.appendChild(document.createTextNode(storage.key(i)));
+                h4.appendChild(document.createTextNode(arrKeys[i]));
                 li.appendChild(h4);
                 li.appendChild(ol);
                 ol.setAttribute('id', 'ol');
-                first.insertBefore(li, first.firstChild);
+                first.appendChild(li);
 
                 for(var j = 0; j < get.length; j++){
                     var li = document.createElement('li'),
@@ -82,6 +81,7 @@ function getStorage(first, second){
                     }
                 }
             }
+            state(circle, msgBox);
         }
     }
 }
@@ -123,10 +123,12 @@ function workLocStorage(){
         if(storage.getItem(data)){
             arr = JSON.parse(storage.getItem(data));
             arr.push(txt);
+            arr.sort();
             storage.setItem(data, JSON.stringify(arr));
         }else{
             arr = [];
             arr.push(txt);
+            arr.sort();
             storage.setItem(data, JSON.stringify(arr));
         }
     };
@@ -493,7 +495,13 @@ function popap(){
             firstTab = document.getElementById('firstTab'),
             secondTab = document.getElementById('secondTab');
         if(target.tagName == 'TD'){
-            var textCont = target.textContent || target.innerText; //IE8(innerText)
+            var textTD = target.textContent || target.innerText, //IE8(innerText)
+                textCont;
+            if(textTD.length == 1){
+                textCont = '0' + textTD;
+            }else{
+                textCont = textTD;
+            }
             addClass(div,'popap');
             pop.style.display = 'block';
             textArea.value = 'Введите Вашу задачу';
@@ -638,18 +646,19 @@ function monthNumber(i){
     }
 }
 
-function storageMonthYear(elem){
-    if(elem.length == 9){
-        return elem.slice(2,9);
-    }else{
-        return elem.slice(3,10);
-    }
-}
-
 function addEvent(elem, type, handler){
     if (elem.addEventListener){
         elem.addEventListener(type, handler, false)
     } else {
         elem.attachEvent("on"+type, handler)
     }
+}
+
+function storageKeySort(){
+    var arr = [];
+    for(var i = 0; i < localStorage.length; i++){
+        arr.push(localStorage.key(i));
+    }
+    arr.sort();
+    return arr;
 }
