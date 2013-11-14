@@ -235,16 +235,7 @@ function createCalendar(id, year, month) {
           cellYear = +cel.slice(-6, -2);
           if(elem.tagName == 'TD'){
               if(elem.className == 'day'){
-                  switch(nowDay.toString().length){
-                      case 1 : {
-                          cellMonth = cel.slice(2,5);
-                          break;
-                      }
-                      case 2: {
-                          cellMonth = cel.slice(3,6);
-                          break;
-                      }
-                  }
+                   cellMonth = cel.slice(3,6);
               }
           }
 
@@ -270,6 +261,13 @@ function createCalendar(id, year, month) {
     changeDate(year, month, monthName2);
 
     actualDate(now.getFullYear(), monthName[now.getMonth()], nowDay);
+
+    if(document.getElementById('tab1').className != 'active'){
+        removeClass(document.getElementById('tab2'), 'active');
+        removeClass(document.getElementById('last'), 'zIndex');
+        addClass(document.getElementById('tab1'), 'active');
+        addClass(document.getElementById('last').previousSibling.previousSibling, 'zIndex');
+    }
 
     document.getElementById('firstTab').innerHTML = '';
 
